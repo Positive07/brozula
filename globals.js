@@ -76,10 +76,18 @@ var _G = {
     deg:   function (x) { return [x/(Math.PI/180)]; },
     exp:   function (x) { return [Math.exp(x)]; },
     floor: function (x) { return [Math.floor(x)]; },
-    fmod:  function () { throw new Error("TODO: Implement math.fmod"); },
-    frexp: function () { throw new Error("TODO: Implement math.frexp"); },
+    fmod:  function (x,y) { return[x % y]; },
+    mod:   function (x,y) { return[x % y]; }, //For compatibility
+    frexp: function (x) {
+      var exp = 0
+      while (!(x < 1 & x >= 0.5)){
+        exp = exp + 1;
+        x /= 2;
+      }
+      return [x, exp]
+    },
     huge:  Infinity,
-    ldexp: function () { throw new Error("TODO: Implement math.ldexp"); },
+    ldexp: function (x,exp) { return [x * (2 ^ exp)]; },
     log:   function (x,b) {
       return [ (typeof b === 'undefined' ) ?
         Math.log(x) :
@@ -101,7 +109,7 @@ var _G = {
       }
       return [min];
     },
-    modf: function () { throw new Error("TODO: Implement math.modf"); },
+    modf: function (x) { return [Math.floor(x), x % 1]; },
     pi: Math.PI,
     pow: function (x) { return [Math.pow(x)]; },
     rad: function (x) { return [x*(Math.PI/180)]; },
