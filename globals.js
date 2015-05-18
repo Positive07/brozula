@@ -25,7 +25,58 @@ var _G = {
     if (falsy(expr)) throw message;
     return slice.call(arguments);
   },
-  bit: {},
+  bit: {
+    tobit: function (x) { return [x|0]; };
+    tohex: function (x, n) {
+      n = n ? n : 8;
+      var hex = (x|0).toString(16);
+      hex = hex.length >= n ? hex.slice(-n) : new Array(n - hex.length + 1).join('0') + hex;
+      return [hex];
+    };
+    bnot: function (x) { return [~(x|0)]; };
+    band: function () {
+      var res = 0xffffffff|0;
+      for ( var i = 1; i < arguments.length; i++ ) {
+        x = arguments[i]|0;
+        res = res & x;
+      }
+      if (arguments.length == 0) { res = 0; }
+      return [res];
+    };
+    bor: function () {
+      var res = 0x00000000|0;
+      for ( var i = 1; i < arguments.length; i++ ) {
+        x = arguments[i]|0;
+        res = res | x;
+      }
+      return [res];
+    };
+    bxor: function () {
+      var res = 0x00000000|0;
+      for ( var i = 1; i < arguments.length; i++ ) {
+        x = arguments[i]|0;
+        res = res ^ x;
+      }
+      return [res];
+    };
+    lshift:  function (x,n) { return [x <<  n]; };
+    rshift:  function (x,n) { return [x >>> n]; };
+    arshift: function (x,n) { return [x >>  n]; };
+    rol: function (x, n) {
+      var a,b = (x|0) << n, (x|0) >>> (31-n);
+      return [(a + b)|0]
+    };
+    ror: function (x, n) {
+      var a,b = (x|0) << (31-n), (x|0) >>> (n);
+      return [(a + b)|0]
+    };
+    bswap: function (n) {
+      var hex = (x|0).toString(16);
+      hex = new Array(8 - hex.length + 1).join('0') + hex;
+      hex = hex.match(/.{1,3}/g);
+      return [parseInt(hex.reverse().join(""), 16)];
+    };
+  },
   collectgarbage: function collectgarbage() { throw new Error("TODO: Implement collectgarbage"); },
   coroutine: {
     create: function () { throw new Error("TODO: Implement coroutine.create"); },
@@ -80,7 +131,7 @@ var _G = {
     mod:   function (x,y) { return[x % y]; }, //For compatibility
     frexp: function (x) {
       var exp = 0
-      while (!(x < 1 & x >= 0.5)){
+      while (!(x < 1 && x >= 0.5)){
         exp = exp + 1;
         x /= 2;
       }
