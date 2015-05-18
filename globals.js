@@ -91,7 +91,7 @@ var _G = {
     log:   function (x,b) {
       return [ (typeof b === 'undefined' ) ?
         Math.log(x) :
-        Math.log(x) / Math.log(x)
+        Math.log(x) / Math.log(b)
       ];
     },
     log10: function (x) { // This is deprecated in Lua 5.2
